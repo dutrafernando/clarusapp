@@ -27,7 +27,7 @@ jobs:
         with:
           context: .
           push: true
-          tags: ${{ secrets.DOCKERHUB_USERNAME }}/fernandindtjr/naviapp:1.0
+          tags: ${{ secrets.DOCKERHUB_USERNAME }}/fernandindtjr/naviapp:latest
           build-args: |
             MONGODB_URI=${{ secrets.MONGODB_URI }}
             SESSION_SECRET=${{ secrets.SESSION_SECRET }}
@@ -36,5 +36,5 @@ jobs:
         run: |
           kubectl apply -f k8s/deployment.yaml
           kubectl apply -f k8s/service.yaml
-          kubectl rollout restart deployment/fernandindtjr/naviapp:1.0 -n db-test
-          kubectl rollout status deployment/fernandindtjr/naviapp:1.0 -n db-test --timeout=120s
+          kubectl rollout restart deployment/clarusapp -n db-test
+          kubectl rollout status deployment/clarusapp -n db-test --timeout=120s
