@@ -3,7 +3,7 @@ name: Build and Deploy - Homologacao
 on:
   push:
     branches:
-      - master  
+      - master
 
 jobs:
   build-and-deploy:
@@ -32,9 +32,21 @@ jobs:
             MONGODB_URI=${{ secrets.MONGODB_URI }}
             SESSION_SECRET=${{ secrets.SESSION_SECRET }}
 
+      - name: Instalar kubectl
+        run: |
+          curl -LO "https://dl.k8s.io/release/$(curl -L -s https://dl.k8s.io/release/stable.txt)/bin/linux/amd64/kubectl"
+          chmod +x kubectl
+          mv kubectl /usr/local/bin/kubectl
+          kubectl version --client
+
+      - name: Configurar kubeconfig
+        run: |
+          mkdir -p /root/.kube
+          echo "${{ secrets.KUBECONFIG }}" | base64 -d > /root/.kube/config
+
       - name: Deploy no Kubernetes
         run: |
           kubectl apply -f k8s/deployment.yaml
           kubectl apply -f k8s/service.yaml
-          kubectl rollout restart deployment/clarusapp -n db-test
-          kubectl rollout status deployment/clarusapp -n db-test --timeout=120s
+          kubectl rollout restart deployment/naviapp -n db-test
+          kubectl rollout status deployment/naviapp -n db-test --timeout=120s

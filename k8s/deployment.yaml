@@ -15,7 +15,7 @@ spec:
     spec:
       containers:
         - name: clarusapp
-          image: fernandindtjr/naviapp:1.0
+          image: fernandindtjr/naviapp:latest
           ports:
             - containerPort: 3000
           env:
