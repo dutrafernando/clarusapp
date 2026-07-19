@@ -50,5 +50,5 @@ jobs:
         run: |
           kubectl apply -f k8s/deployment.yaml
           kubectl apply -f k8s/service.yaml
-          kubectl rollout restart deployment/naviapp -n db-test
-          kubectl rollout status deployment/naviapp -n db-test --timeout=120s
+          kubectl rollout restart deployment/clarusapp -n db-test
+          kubectl rollout status deployment/clarusapp -n db-test --timeout=120s
