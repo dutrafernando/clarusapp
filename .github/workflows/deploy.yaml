@@ -36,13 +36,15 @@ jobs:
         run: |
           curl -LO "https://dl.k8s.io/release/$(curl -L -s https://dl.k8s.io/release/stable.txt)/bin/linux/amd64/kubectl"
           chmod +x kubectl
-          mv kubectl /usr/local/bin/kubectl
-          kubectl version --client
+          mkdir -p $HOME/bin
+          mv kubectl $HOME/bin/kubectl
+          echo "$HOME/bin" >> $GITHUB_PATH
 
       - name: Configurar kubeconfig
         run: |
-          mkdir -p /root/.kube
-          echo "${{ secrets.KUBECONFIG }}" | base64 -d > /root/.kube/config
+          mkdir -p $HOME/.kube
+          echo "${{ secrets.KUBECONFIG }}" | base64 -d > $HOME/.kube/config
+          chmod 600 $HOME/.kube/config
 
       - name: Deploy no Kubernetes
         run: |
