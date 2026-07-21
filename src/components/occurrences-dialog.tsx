@@ -114,7 +114,7 @@ export function OccurrencesDialog({ occurrences, nonConformities, children }: Oc
                           {nc.description}
                         </TableCell>
                         <TableCell className="whitespace-nowrap text-center px-2 sm:px-4">
-                          {nc.photoDataUri ? (
+                          {(nc.photoUrl || nc.photoDataUri) ? (
                             <Badge variant="outline" className="flex items-center gap-1 w-fit mx-auto text-[9px] sm:text-[10px] px-1.5 py-0 h-4 sm:h-5 text-accent border-accent/30 bg-accent/5">
                               <Eye className="h-2.5 w-2.5" /> Foto
                             </Badge>
@@ -162,10 +162,10 @@ export function OccurrencesDialog({ occurrences, nonConformities, children }: Oc
               </div>
             </div>
 
-            {selectedNC?.photoDataUri && (
+            {(selectedNC?.photoUrl || selectedNC?.photoDataUri) && (
               <div className="relative w-full aspect-video rounded-xl overflow-hidden border shadow-inner bg-black/5">
                 <Image 
-                  src={selectedNC.photoDataUri} 
+                  src={selectedNC?.photoUrl || selectedNC?.photoDataUri || ''} 
                   alt="Evidência da Não Conformidade" 
                   fill 
                   className="object-contain"

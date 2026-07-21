@@ -11,6 +11,7 @@ import { SESSION_COOKIE_NAME, encrypt, decryptJWT, getSession, invalidateSession
 import { convertToPlainObject } from './utils';
 import { DataTransformer, generateSampleTransformation } from './advanced-transformation';
 import bcrypt from 'bcryptjs';
+import { uploadDataUriToObjectStorage } from './object-storage';
 
 // --- Logger Action ---
 async function logAction(action: string, details: Record<string, any>) {
@@ -1517,8 +1518,13 @@ export async function createNonConformity(formData: FormData) {
 
   try {
     const db = await dbConnect();
+    const photoDataUri = typeof validatedFields.data.photoDataUri === 'string' ? validatedFields.data.photoDataUri : undefined;
+    const storedPhotoUrl = photoDataUri ? await uploadDataUriToObjectStorage(photoDataUri, 'non-conformities') : null;
+
     const newNC = {
       ...validatedFields.data,
+      ...(storedPhotoUrl ? { photoUrl: storedPhotoUrl } : {}),
+      ...(storedPhotoUrl ? { photoDataUri: undefined } : {}),
       userId: new ObjectId(session.user._id),
       userName: session.user.name,
       timestamp: new Date(),

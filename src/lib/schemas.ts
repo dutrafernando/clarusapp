@@ -310,6 +310,7 @@ export const NonConformitySchema = z.object({
   userId: z.union([z.string(), z.any()]),
   userName: z.string(),
   photoDataUri: z.string().optional(),
+  photoUrl: z.string().optional(),
   description: z.string().min(1, "A descrição é obrigatória."),
   timestamp: z.union([z.string(), z.date()]),
 });
@@ -319,6 +320,7 @@ export const CreateNonConformitySchema = NonConformitySchema.pick({
   locationId: true,
   locationName: true,
   photoDataUri: true,
+  photoUrl: true,
   description: true,
 });
 
