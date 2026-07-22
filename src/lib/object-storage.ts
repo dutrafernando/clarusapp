@@ -1,4 +1,4 @@
-import { PutObjectCommand, S3Client } from '@aws-sdk/client-s3';
+import { CreateBucketCommand, HeadBucketCommand, PutObjectCommand, S3Client } from '@aws-sdk/client-s3';
 
 interface ObjectStorageConfig {
   endpoint: string;
@@ -62,6 +62,17 @@ export async function uploadDataUriToObjectStorage(dataUri: string, prefix = 'up
     },
     forcePathStyle: true,
   });
+
+  try {
+    await client.send(new HeadBucketCommand({ Bucket: config.bucket }));
+  } catch (error: any) {
+    const statusCode = error?.$metadata?.httpStatusCode;
+    if (statusCode === 404 || statusCode === 403 || error?.name === 'NotFound') {
+      await client.send(new CreateBucketCommand({ Bucket: config.bucket }));
+    } else {
+      throw error;
+    }
+  }
 
   await client.send(
     new PutObjectCommand({
