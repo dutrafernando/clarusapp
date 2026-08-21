@@ -1,4 +1,4 @@
-name: Build and Deploy - Homologacao
+name: build and deploy - 001 - homologacao
 
 on:
   push:
@@ -6,18 +6,39 @@ on:
       - master
 
 jobs:
-  build-and-deploy:
+  ci:
     runs-on: self-hosted
-
     steps:
-      - name: Checkout código
+      - name: Checkout codigo
+        uses: actions/checkout@v4
+
+      - name: versao node
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+
+      - name: install dependencies
+        run: npm ci
+
+      - name: run typecheck
+        run: npm run typecheck
+
+      - name: run build
+        run: npm run build
+
+  build-and-deploy:
+    needs: ci
+    runs-on: self-hosted
+    steps:
+      - name: Checkout codigo
         uses: actions/checkout@v4
 
       - name: Set up Docker Buildx
-        uses: docker/setup-buildx-action@v3
+        uses: docker/setup-buildx-action@v4
 
       - name: Login no Docker Hub
-        uses: docker/login-action@v3
+        uses: docker/login-action@v4
         with:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_TOKEN }}
@@ -27,28 +48,7 @@ jobs:
         with:
           context: .
           push: true
-          tags: fernandindtjr/naviapp:latest
+          tags: fernandindtjr/naviapp:${{ github.sha }}
           build-args: |
             MONGODB_URI=${{ secrets.MONGODB_URI }}
             SESSION_SECRET=${{ secrets.SESSION_SECRET }}
-
-      - name: Instalar kubectl
-        run: |
-          curl -LO "https://dl.k8s.io/release/$(curl -L -s https://dl.k8s.io/release/stable.txt)/bin/linux/amd64/kubectl"
-          chmod +x kubectl
-          mkdir -p $HOME/bin
-          mv kubectl $HOME/bin/kubectl
-          echo "$HOME/bin" >> $GITHUB_PATH
-
-      - name: Configurar kubeconfig
-        run: |
-          mkdir -p $HOME/.kube
-          echo "${{ secrets.KUBECONFIG }}" | base64 -d > $HOME/.kube/config
-          chmod 600 $HOME/.kube/config
-
-      - name: Deploy no Kubernetes
-        run: |
-          kubectl apply -f k8s/deployment.yaml
-          kubectl apply -f k8s/service.yaml
-          kubectl rollout restart deployment/clarusapp -n db-test
-          kubectl rollout status deployment/clarusapp -n db-test --timeout=120s
