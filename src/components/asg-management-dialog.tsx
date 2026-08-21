@@ -54,16 +54,15 @@ export function AsgManagementDialog({ allAsgs, children, nextAsgCode }: AsgManag
     }
     setActiveTab(value);
   }
-
-  const handleToggleActive = (id: string, currentActiveState: boolean) => {
+const handleToggleActive = (id: string, currentActiveState: boolean) => {
     startTransition(async () => {
       const result = await toggleAsgActive(id, !currentActiveState);
       if (result.success) {
-        toast({ title: 'Sucesso', description: result.success });
+        toast({ title: 'Sucesso', description: result.message || 'Status alterado com sucesso!' });
         const refreshedAsgs = await getAsgs();
         setAsgs(refreshedAsgs);
       } else {
-        toast({ title: 'Erro', description: result.error, variant: 'destructive' });
+        toast({ title: 'Erro', description: result.message || 'Ocorreu um erro.', variant: 'destructive' });
       }
     });
   };

@@ -32,14 +32,21 @@ export function AsgForm({ asg, onFinished, nextAsgCode }: AsgFormProps) {
   const { toast } = useToast();
   const formRef = useRef<HTMLFormElement>(null);
   
+  const initialState = { 
+    error: undefined as string | undefined, 
+    fieldErrors: {} as { code?: string[]; name?: string[] }, 
+    success: false, 
+    message: '' 
+  };
+
   const [createState, createAction] = useFormState(
     createAsg, 
-    { error: null, fieldErrors: {}, success: false, message: '' }
+    initialState
   );
   
   const [updateState, updateAction] = useFormState(
     (prevState: any, formData: FormData) => updateAsg(asg!._id.toString(), prevState, formData),
-    { error: null, fieldErrors: {}, success: false, message: '' }
+    initialState
   );
 
   const state = isEditing ? updateState : createState;

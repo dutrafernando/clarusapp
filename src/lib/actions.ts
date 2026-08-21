@@ -99,14 +99,16 @@ export async function login(prevState: any, formData: FormData) {
   const expires = new Date(Date.now() + SESSION_DURATION_MS);
   const session = await encrypt({ user: { _id: user._id.toString(), name: user.name, login: user.login, perfil: user.perfil || 'usuario' }, expires, sessionId });
 
-  cookies().set(SESSION_COOKIE_NAME, session, { expires, httpOnly: true, sameSite: 'lax' });
+  const cookieStore = await cookies();
+  cookieStore.set(SESSION_COOKIE_NAME, session, { expires, httpOnly: true, sameSite: 'lax' });
 
   await logAction('login_success', { login: normalizedLogin });
   redirect('/dashboard');
 }
 
 export async function logout() {
-  const cookieValue = cookies().get(SESSION_COOKIE_NAME)?.value;
+  const cookieStore = await cookies();
+  const cookieValue = cookieStore.get(SESSION_COOKIE_NAME)?.value;
   let userLogin = 'unknown';
   if (cookieValue) {
     const payload = await decryptJWT(cookieValue);
@@ -126,7 +128,8 @@ export async function renewSession() {
   if (!payload) return;
   const expires = new Date(Date.now() + SESSION_DURATION_MS);
   const newToken = await encrypt({ user: payload.user, sessionId: payload.sessionId });
-  cookies().set(SESSION_COOKIE_NAME, newToken, { expires, httpOnly: true, sameSite: 'lax' });
+  const cookieStore = await cookies();
+  cookieStore.set(SESSION_COOKIE_NAME, newToken, { expires, httpOnly: true, sameSite: 'lax' });
 }
 
 // --- Status Normalization Helper ---
@@ -1158,18 +1161,15 @@ export async function toggleAreaActive(id: string, isActive: boolean) {
 
 // --- Settings Actions ---
 
-export async function getCleaningSettings() {
-  try {
-    const db = await dbConnect();
-    const settings = await db.collection('system_settings').findOne({ _id: 'default' });
-    if (settings) {
-      const { _id, ...rest } = settings;
-      return rest;
-    }
-  } catch (error) {
-    console.error("Error in getCleaningSettings:", error);
-  }
-  return { concurrent: 30, terminal: 45 };
+export async function getCleaningSettings(): Promise<{ concurrent: number; terminal: number }> {
+  const db = await dbConnect();
+  const settings = await db.collection('settings').findOne({ _id: 'cleaning' });
+  
+  // Garantia de que o retorno é o que o sistema espera
+  return {
+    concurrent: settings?.concurrent || 0,
+    terminal: settings?.terminal || 0
+  };
 }
 
 export async function updateCleaningSettings(prevState: any, formData: FormData) {
