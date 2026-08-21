@@ -1,10 +1,11 @@
 import { NextResponse } from 'next/server';
 import { cookies } from 'next/headers';
-import { decrypt, SESSION_COOKIE_NAME } from '@/lib/session';
+import { decryptJWT, SESSION_COOKIE_NAME } from '@/lib/session';
 
 export async function GET() {
   try {
-    const cookie = cookies().get(SESSION_COOKIE_NAME)?.value;
+    const cookieStore = await cookies();
+    const cookie = cookieStore.get(SESSION_COOKIE_NAME)?.value;
     
     if (!cookie) {
       return NextResponse.json({ 
