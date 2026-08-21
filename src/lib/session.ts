@@ -33,7 +33,7 @@ export async function decryptJWT(input: string): Promise<any> {
 // NOT safe for Edge Runtime — use only in server components / actions / API routes.
 export async function getSession() {
   const cookieStore = await cookies();
-  const cookie = cookies().get(SESSION_COOKIE_NAME)?.value;
+  const cookie = cookieStore.get(SESSION_COOKIE_NAME)?.value; 
   if (!cookie) return null;
 
   const payload = await decryptJWT(cookie);

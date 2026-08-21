@@ -670,7 +670,7 @@ export async function getAuditDraft(locationId: string): Promise<Record<string, 
 export async function getIntegrationConfig(): Promise<IntegrationConfig> {
   try {
     const db = await dbConnect();
-    const config = await db.collection('integration_settings').findOne({ _id: 'default' });
+    const config = await db.collection('integration_settings').findOne({ _id: 'default' as any });
     if (config) {
       return convertToPlainObject(config);
     }
@@ -694,7 +694,7 @@ export async function saveIntegrationConfig(config: IntegrationConfig) {
   const db = await dbConnect();
   const { _id, ...data } = config;
   await db.collection('integration_settings').updateOne(
-    { _id: 'default' },
+    { _id: 'default' as any },
     { $set: { ...data, updatedAt: new Date() } },
     { upsert: true }
   );
@@ -813,7 +813,7 @@ export async function runManualSync() {
     }
 
     await db.collection('integration_settings').updateOne(
-      { _id: 'default' },
+      { _id: 'default' as any },
       { $set: { lastSync: new Date(), lastSyncStats: { ...result.stats, updated: updatedCount, created: createdCount, deactivated: deactivatedCount } } }
     );
 
