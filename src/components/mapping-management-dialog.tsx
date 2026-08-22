@@ -70,7 +70,7 @@ export function MappingManagementDialog({ children }: MappingManagementDialogPro
         toast({ title: 'Sucesso', description: result.message });
         await refreshData();
       } else {
-        toast({ title: 'Erro', description: result.error, variant: 'destructive' });
+        toast({ title: 'Erro', description: result.message, variant: 'destructive' });
       }
     });
   };

@@ -27,23 +27,33 @@ const profileOptions: { value: UserProfile; label: string }[] = [
 ];
 
 export function UserForm({ user, onFinished }: UserFormProps) {
-  const isEditing = !!user;
+  const currentUser = user as User | null;
+  const isEditing = !!currentUser;
   const { toast } = useToast();
   const router = useRouter();
   const [isSubmitting, setIsSubmitting] = useState(false);
 
+  const initialState = {
+    error: undefined as string | undefined,
+    fieldErrors: {} as Record<string, string[]>,
+    success: false,
+    message: ''
+  };
+
   const [createState, createAction] = useActionState(
-    createUser,
-    { error: null, fieldErrors: {}, success: false, message: '' }
+    createUser as any,
+    initialState
   );
 
   const [updateState, updateAction] = useActionState(
-    (prevState: any, formData: FormData) => updateUser(user!._id.toString(), prevState, formData),
-    { error: null, fieldErrors: {}, success: false, message: '' }
+    (async (prevState: any, formData: FormData) => {
+      return await updateUser(user!._id.toString(), prevState, formData);
+    }) as any,
+    initialState
   );
 
   const state  = isEditing ? updateState  : createState;
-  const action = isEditing ? updateAction : createAction;
+  const action: (payload: FormData) => void = isEditing ? updateAction : createAction;
 
   useEffect(() => {
     if (state?.success) {
@@ -57,16 +67,18 @@ export function UserForm({ user, onFinished }: UserFormProps) {
     }
   }, [state, toast, onFinished, router]);
 
-  const handleSubmit = (formData: FormData) => {
-    setIsSubmitting(true);
-    action(formData);
-  };
+  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+  e.preventDefault();
+  setIsSubmitting(true);
+  const formData = new FormData(e.currentTarget);
+  action(formData);
+};
 
   const inputCls = "bg-white border-gray-200 text-gray-900 placeholder:text-gray-300 focus-visible:ring-[#A0E9FF]/50 focus-visible:border-[#A0E9FF] h-10 rounded-lg";
   const labelCls = "text-[10px] font-black uppercase tracking-widest text-gray-400";
 
   return (
-    <form action={handleSubmit} className="space-y-4 p-1">
+    <form onSubmit={handleSubmit} className="space-y-4 p-1">
 
       <div className="space-y-1.5">
         <Label htmlFor="name" className={labelCls}>Nome Completo</Label>
@@ -74,7 +86,6 @@ export function UserForm({ user, onFinished }: UserFormProps) {
         {state?.fieldErrors?.name && <p className="text-xs text-destructive">{state.fieldErrors.name[0]}</p>}
       </div>
 
-      {/* Hidden inputs for fields disabled on the admin account — disabled inputs are not submitted by the browser */}
       {user?.login === 'admin' && <input type="hidden" name="login" value={user.login} />}
       {user?.login === 'admin' && <input type="hidden" name="perfil" value={user.perfil} />}
 

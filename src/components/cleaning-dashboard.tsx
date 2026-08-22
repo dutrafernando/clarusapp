@@ -51,9 +51,14 @@ export default function CleaningDashboard({
   }, [locations]);
 
   return (
-     <div className="space-y-3">
+    <div className="space-y-3">
       {setoresAgrupados.map((setor) => (
-        <SetorExpansivel key={setor.nome} setor={setor} onLocationClick={onStartCleaning} />
+        <SetorExpansivel
+          key={setor.nome}
+          setor={setor}
+          cleaningSettings={cleaningSettings}
+          onLocationClick={onStartCleaning}
+        />
       ))}
     </div>
   );

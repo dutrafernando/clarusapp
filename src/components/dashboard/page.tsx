@@ -133,7 +133,7 @@ export default function DashboardPage() {
 
   return (
     <div className="flex flex-col h-screen bg-background">
-      <Header asgs={asgs} users={users} nextAsgCode={nextAsgCode} cleaningSettings={cleaningSettings} occurrences={occurrences} allAreas={areas} />
+      <Header asgs={asgs} users={users} nextAsgCode={nextAsgCode} cleaningSettings={cleaningSettings} occurrences={occurrences} allAreas={areas} nonConformities={[]} user={{ name: 'Admin', perfil: 'admin' } as any} />
       
       <main className="flex-1 p-2 md:p-4 overflow-hidden flex flex-col gap-4">
         
@@ -150,8 +150,7 @@ export default function DashboardPage() {
         
         <div className="flex-1 overflow-hidden">
            <CleaningDashboard
-              availableLocations={availableLocations}
-              occupiedLocations={occupiedLocations}
+              locations={[...availableLocations, ...occupiedLocations]}
               cleaningSettings={cleaningSettings}
               onStartCleaning={(location) => {
                 setCleaningLocation(location);

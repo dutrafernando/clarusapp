@@ -27,27 +27,37 @@ function SubmitButton({ isEditing }: { isEditing: boolean }) {
   );
 }
 
-export function AsgForm({ asg, onFinished, nextAsgCode }: AsgFormProps) {
+type AsgFormState = {
+  success?: boolean;
+  message?: string;
+  error?: string;
+  fieldErrors?: {
+    code?: string[];
+    name?: string[];
+    active?: string[];
+  };
+};
+
+export function AsgForm({ asg, onFinished }: AsgFormProps) {
   const isEditing = !!asg;
   const { toast } = useToast();
   const formRef = useRef<HTMLFormElement>(null);
   
-  const initialState = { 
-    error: undefined as string | undefined, 
-    fieldErrors: {} as { code?: string[]; name?: string[] }, 
-    success: false, 
-    message: '' 
-  };
+  const initialState = {
+  success: false,
+  message: '',
+  error: '',
+  fieldErrors: {} as Record<string, string[]>
+}
 
-  const [createState, createAction] = useFormState(
-    createAsg, 
-    initialState
-  );
+  const [createState, createAction] = useFormState(createAsg as any, initialState);
   
   const [updateState, updateAction] = useFormState(
-    (prevState: any, formData: FormData) => updateAsg(asg!._id.toString(), prevState, formData),
-    initialState
-  );
+  (async (prevState: any, formData: FormData) => {
+    return await updateAsg(asg!._id.toString(), prevState, formData);
+  }) as any,
+  initialState
+);
 
   const state = isEditing ? updateState : createState;
   const action = isEditing ? updateAction : createAction;
@@ -89,7 +99,7 @@ export function AsgForm({ asg, onFinished, nextAsgCode }: AsgFormProps) {
         <Input 
           id="code" 
           name="code" 
-          value={isEditing ? asg?.code : nextAsgCode} 
+          value={isEditing ? asg?.code : ""} 
           readOnly 
           disabled 
         />
