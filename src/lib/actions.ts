@@ -119,7 +119,7 @@ export async function logout() {
       await invalidateSession(payload.sessionId, userLogin);
     }
   }
-  cookies().set(SESSION_COOKIE_NAME, '', { expires: new Date(0) });
+  cookieStore.set(SESSION_COOKIE_NAME, '', { expires: new Date(0) });
   redirect('/login');
 }
 
@@ -204,10 +204,11 @@ export async function getLocations(): Promise<Location[]> {
       return acc;
     }, {} as Record<string, any>);
 
-    const activeCleaningsByLocationId = (activeCleanings || []).reduce((acc, ac) => {
-      acc[ac.locationId] = ac;
-      return acc;
-    }, {} as Record<string, ActiveCleaning>);
+    const activeCleaningsByLocationId = (activeCleanings || []).reduce((acc, item) => {
+  const ac = item as unknown as ActiveCleaning; 
+  acc[ac.locationId] = ac;
+  return acc;
+}, {} as Record<string, ActiveCleaning>);
 
     const pendingRequestIds = new Set((scheduledRequests || []).map(sr => sr.locationId));
 
@@ -1163,7 +1164,7 @@ export async function toggleAreaActive(id: string, isActive: boolean) {
 
 export async function getCleaningSettings(): Promise<{ concurrent: number; terminal: number }> {
   const db = await dbConnect();
-  const settings = await db.collection('settings').findOne({ _id: 'cleaning' });
+  const settings = await db.collection('settings').findOne({ _id: 'cleaning' as any });
   
   // Garantia de que o retorno é o que o sistema espera
   return {
@@ -1187,7 +1188,7 @@ export async function updateCleaningSettings(prevState: any, formData: FormData)
 
   const db = await dbConnect();
   await db.collection('system_settings').updateOne(
-    { _id: 'default' }, 
+    { _id: 'default' as any }, 
     { $set: validatedFields.data },
     { upsert: true }
   );
@@ -1697,7 +1698,7 @@ export async function getLastCleaningRecord(locationId: string): Promise<Cleanin
 export async function getWebhookSettings(): Promise<WebhookSettings> {
   try {
     const db = await dbConnect();
-    const settings = await db.collection('system_settings').findOne({ _id: 'webhook' });
+    const settings = await db.collection('system_settings').findOne({ _id: 'webhook' as any });
     
     if (settings) {
       const { _id, ...rest } = settings;
@@ -1735,7 +1736,7 @@ export async function saveWebhookSettings(settings: WebhookSettings) {
 
     const db = await dbConnect();
     await db.collection('system_settings').updateOne(
-      { _id: 'webhook' },
+      { _id: 'webhook' as any },
       { $set: { ...validated.data, updatedAt: new Date() } },
       { upsert: true }
     );
@@ -1774,7 +1775,7 @@ export type ViewMode = 'solicitation' | 'view_only';
 export async function getViewMode(): Promise<ViewMode> {
   try {
     const db = await dbConnect();
-    const doc = await db.collection('system_settings').findOne({ _id: 'viewMode' });
+    const doc = await db.collection('system_settings').findOne({ _id: 'viewMode' as any });
     return (doc?.value as ViewMode) || 'solicitation';
   } catch {
     return 'solicitation';
@@ -1789,7 +1790,7 @@ export async function saveViewMode(mode: ViewMode) {
     }
     const db = await dbConnect();
     await db.collection('system_settings').updateOne(
-      { _id: 'viewMode' },
+      { _id: 'viewMode' as any },
       { $set: { value: mode, updatedAt: new Date() } },
       { upsert: true }
     );

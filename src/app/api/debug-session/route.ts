@@ -14,7 +14,7 @@ export async function GET() {
       });
     }
 
-    const decrypted = await decrypt(cookie);
+    const decrypted = await decryptJWT(cookie);
     
     return NextResponse.json({
       hasCookie: true,
