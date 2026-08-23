@@ -46,12 +46,14 @@ jobs:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_TOKEN }}
 
-      - name: Build e Push da imagem
+      - name: Build and push Docker image
         uses: docker/build-push-action@v5
         with:
           context: .
           push: true
-          tags: fernandindtjr/naviapp:${{ github.sha }}
+          tags: |
+            fernandindtjr/naviapp:28d3d1ac7afbbd2c4d5ab8ab25d5a5a173a4b08a
+            fernandindtjr/naviapp:${{ github.sha }}
           build-args: |
             MONGODB_URI=${{ secrets.MONGODB_URI }}
             SESSION_SECRET=${{ secrets.SESSION_SECRET }}
