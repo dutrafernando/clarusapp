@@ -26,6 +26,9 @@ jobs:
 
       - name: run build
         run: npm run build
+        env:
+         MONGODB_URI: ${{ secrets.MONGODB_URI }}
+         SESSION_SECRET: ${{ secrets.SESSION_SECRET }}
 
   build-and-deploy:
     needs: ci
