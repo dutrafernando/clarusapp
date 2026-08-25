@@ -9,7 +9,7 @@ jobs:
   ci:
     runs-on: self-hosted
     steps:
-      - name: Checkout codigo
+      - name: Checkout code
         uses: actions/checkout@v4
 
       - name: versao node
@@ -20,6 +20,9 @@ jobs:
 
       - name: install dependencies
         run: npm ci
+
+      - name: run lining
+        run: npm run lint
 
       - name: run typecheck
         run: npm run typecheck
