@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-require-imports */
+/* eslint-disable @typescript-eslint/no-var-requires */
 const jsPDF = require("jspdf").jsPDF;
-/* eslint-disable @typescript-eslint/no-require-imports */
 const autoTable = require("jspdf-autotable").default;
 import { format, isValid } from "date-fns";
 import { ptBR } from "date-fns/locale";
