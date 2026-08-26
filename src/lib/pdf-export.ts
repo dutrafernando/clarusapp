@@ -1,9 +1,10 @@
-/* eslint-disable @typescript-eslint/no-require-imports */
-/* eslint-disable @typescript-eslint/no-var-requires */
-const jsPDF = require("jspdf").jsPDF;
-const autoTable = require("jspdf-autotable").default;
+import { jsPDF } from "jspdf";
+import "jspdf-autotable";
 import { format, isValid } from "date-fns";
 import { ptBR } from "date-fns/locale";
+
+const autoTable = require("jspdf-autotable").default;
+
 
 // ── Paleta ──────────────────────────────────────────────────────────────────
 const BRAND_DARK  = [15,  76,  92];  // #0F4C5C
