@@ -177,7 +177,7 @@ export function OccurrencesDialog({ occurrences, nonConformities, children }: Oc
               <p className="text-[9px] font-bold text-muted-foreground uppercase tracking-widest">Descrição do Problema</p>
               <div className="bg-muted/30 p-4 rounded-xl border border-border/40">
                 <p className="text-sm text-foreground whitespace-pre-wrap leading-relaxed italic">
-                  "{selectedNC?.description}"
+                  &quot;{selectedNC?.description}&quot;
                 </p>
               </div>
             </div>

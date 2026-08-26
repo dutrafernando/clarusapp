@@ -136,7 +136,7 @@ export function QrCodeDialog({ item, children }: QrCodeDialogProps) {
             Escaneie para iniciar a higienização.
           </p>
            <p className="text-xs text-muted-foreground mt-2 text-center">
-             Use "Testar Link" para simular o escaneamento ou copie o link para testes.
+             Use &quot;Testar Link&quot; para simular o escaneamento ou copie o link para testes.
            </p>
         </div>
         <DialogFooter className="gap-2 sm:justify-between flex-wrap">

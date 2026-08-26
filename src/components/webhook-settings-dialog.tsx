@@ -184,7 +184,7 @@ export function WebhookSettingsDialog({ children }: WebhookSettingsDialogProps) 
                 <Variable className="h-4 w-4 text-[#0F4C5C] shrink-0 mt-0.5" />
                 <p className="text-[10px] text-gray-500 leading-normal">
                   Utilize as tags acima para preenchimento automático. Exemplo: <br/>
-                  <span className="text-[#0F4C5C]/60 font-mono">"Nova tarefa no {`{local}`} | {`{tipo_limpeza}`}"</span>
+                  <span className="text-[#0F4C5C]/60 font-mono">&quot;Nova tarefa no {`{local}`} | {`{tipo_limpeza}`}&quot;</span>
                 </p>
               </div>
             </div>
