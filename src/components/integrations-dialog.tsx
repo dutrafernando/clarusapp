@@ -171,11 +171,11 @@ export function IntegrationsDialog({ children, open, onOpenChange }: Integration
               <CardContent className="space-y-4">
                 <div className="grid grid-cols-2 gap-4">
                   <div>
-                    <Label htmlFor="availableMapping">Valor para "Disponível"</Label>
+                    <Label htmlFor="availableMapping">Valor para 'Disponível'</Label>
                     <Input id="availableMapping" value={config.statusMappings?.available || ''} onChange={(e) => handleNestedFieldChange('statusMappings', 'available', e.target.value)} />
                   </div>
                   <div>
-                    <Label htmlFor="occupiedMapping">Valor para "Ocupado"</Label>
+                    <Label htmlFor="occupiedMapping">Valor para 'Ocupado'</Label>
                     <Input id="occupiedMapping" value={config.statusMappings?.occupied || ''} onChange={(e) => handleNestedFieldChange('statusMappings', 'occupied', e.target.value)} />
                   </div>
                 </div>
