@@ -3,7 +3,7 @@ name: build and deploy - 001 - homologacao
 on:
   push:
     branches:
-      - master
+      - dev
 
 jobs:
   ci:
