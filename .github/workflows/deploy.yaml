@@ -22,7 +22,7 @@ jobs:
         run: npm ci
 
       - name: Dependency vulnerability scan
-        run: npm audit --audit-level=critica
+        run: npm audit --audit-level=critical
         
       - name: run lining
         run: npm run lint
