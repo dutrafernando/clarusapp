@@ -1,10 +1,10 @@
-import cron from 'node-cron';
+import cron, { ScheduledTask } from 'node-cron';
 import { getIntegrationConfig, runManualSync } from './actions';
 import { syncLogger } from './logger';
 
 class SyncService {
   private isRunning: boolean = false;
-  private currentJob: cron.ScheduledTask | null = null;
+  private currentJob: ScheduledTask | null = null;
   private lastRun: Date | null = null;
   private nextRun: Date | null = null;
   private currentInterval: number | null = null;
@@ -49,11 +49,10 @@ class SyncService {
     this.currentInterval = intervalMinutes;
 
     this.currentJob = cron.schedule(cronExpression, async () => {
-      syncLogger.info('Disparando sincronização agendada');
-      await this.executeScheduledSync('scheduled');
+    syncLogger.info('Disparando sincronização agendada');
+    await this.executeScheduledSync('scheduled');
     }, {
-      scheduled: true,
-      timezone: "America/Sao_Paulo"
+    timezone: "America/Sao_Paulo"
     });
 
     this.calculateNextRun(intervalMinutes);
