@@ -27,10 +27,8 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Dependency vulnerability scan
-        uses: npm/action-audit@v1
-        with:
-          audit-level: critical
-
+        run: npm audit --audit-level=critical
+        
       - name: run lining
         run: npm run lint
 
