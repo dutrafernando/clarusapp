@@ -80,12 +80,4 @@ jobs:
             severity: CRITICAL
 
         - name: Push Docker image
-          uses: docker/build-push-action@v5
-          with:
-            context: .
-            push: true                           
-            tags: |
-              fernandindtjr/naviapp:${{ github.sha }}
-            build-args: |
-              MONGODB_URI=${{ secrets.MONGODB_URI }}
-              SESSION_SECRET=${{ secrets.SESSION_SECRET }}
+          run: docker push fernandindtjr/naviapp:${{ github.sha }}
