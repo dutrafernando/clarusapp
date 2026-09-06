@@ -83,10 +83,9 @@ build-and-deploy:
         uses: docker/build-push-action@v5
         with:
           context: .
-          push: true                          
+          push: true                           
           tags: |
             fernandindtjr/naviapp:${{ github.sha }}
-            fernandindtjr/naviapp:latest
           build-args: |
             MONGODB_URI=${{ secrets.MONGODB_URI }}
             SESSION_SECRET=${{ secrets.SESSION_SECRET }}
