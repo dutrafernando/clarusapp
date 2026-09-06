@@ -1,9 +1,9 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { syncService } from '@/lib/sync-service';
+import { getSyncService } from '@/lib/sync-service';
 
 export async function POST(request: NextRequest) {
   try {
-    const result = await syncService.forceSync();
+    const result = await getSyncService().forceSync();
     
     return NextResponse.json({
       success: true,

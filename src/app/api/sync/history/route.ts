@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { dbConnect } from '@/lib/db';
 
+
 export async function GET(request: NextRequest) {
   try {
     const db = await dbConnect();

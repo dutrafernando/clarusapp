@@ -2,9 +2,6 @@
 import { MongoClient, Db } from 'mongodb';
 
 const MONGODB_URI = process.env.MONGODB_URI;
-if (!MONGODB_URI) {
-  throw new Error('Please define the MONGODB_URI environment variable inside .env.local');
-}
 
 const DB_NAME = 'clarusdb';
 
@@ -39,14 +36,12 @@ async function seedDatabase(db: Db) {
 }
 
 export async function dbConnect(): Promise<Db> {
-  if (cachedDb) {
-    return cachedDb;
+  if (!MONGODB_URI) {
+    throw new Error('Please define the MONGODB_URI environment variable inside .env.local');
   }
 
-  if (!cachedClient) {
-    cachedClient = await MongoClient.connect(MONGODB_URI!);
-    // @ts-ignore
-    global.mongoClient = cachedClient;
+  if (cachedDb) {
+    return cachedDb;
   }
   
   const db = cachedClient.db(DB_NAME);

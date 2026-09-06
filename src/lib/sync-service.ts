@@ -130,4 +130,11 @@ class SyncService {
   }
 }
 
-export const syncService = new SyncService();
+let _syncService: SyncService | null = null;
+
+export function getSyncService(): SyncService {
+  if (!_syncService) {
+    _syncService = new SyncService();
+  }
+  return _syncService;
+}
